@@ -1,4 +1,5 @@
 #! /bin/bash
+set -x
 source ./setup.config || echo "Could not source setup.config: $!" 1>&2
 venv_name="${VENV_TAG}_venv"
 venv_bin="${venv_name}/bin"

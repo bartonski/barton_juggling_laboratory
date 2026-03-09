@@ -1,6 +1,46 @@
 # Mediapipe hand detecton
 # TODO: Move into module
 # TODO: Get centroid of hand (or perhaps just track base of middle finger?)
+# See https://ai.google.dev/edge/mediapipe/solutions/vision/pose_landmarker#pose_landmarker_model for diagram of landmarks.
+
+# 0 - nose --
+# 1 - left eye (inner)
+# 2 - left eye
+# 3 - left eye (outer)
+# 4 - right eye (inner)
+# 5 - right eye
+# 6 - right eye (outer)
+# 7 - left ear
+# 8 - right ear
+# 9 - mouth (left)
+# 10 - mouth (right)
+# 11 - left shoulder
+# 12 - right shoulder
+# 13 - left elbow --
+# 14 - right elbow --
+# 15 - left wrist --
+# 16 - right wrist --
+# 17 - left pinky --
+# 18 - right pinky --
+# 19 - left index --
+# 20 - right index --
+# 21 - left thumb --
+# 22 - right thumb --
+# 23 - left hip
+# 24 - right hip
+# 25 - left knee
+# 26 - right knee
+# 27 - left ankle
+# 28 - right ankle
+# 29 - left heel
+# 30 - right heel
+# 31 - left foot index
+# 32 - right foot index
+
+# We can use the x coordinate for 'nose' as the center line of the pattern.
+# The landmarks we care about for juggling are left and right elbow,
+# wrist, pinky, index and thumb. From the samples that I've looked at,
+# the fingers aren't very accurate, but elbow and wrist are.
 
 import cv2
 import sys
@@ -12,6 +52,20 @@ from mediapipe.tasks.python import vision
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 import numpy as np
+
+juggling_landmarks = {
+    "nose"        : 0,
+    "left_elbow"  : 13,
+    "right_elbow" : 14,
+    "left_wrist"  : 15,
+    "right_wrist" : 16,
+    "left_pinky"  : 17,
+    "right_pinky" : 18,
+    "left_index"  : 19,
+    "right_index" : 20,
+    "left_thumb"  : 21,
+    "right_thumb" : 22
+}
 
 def draw_landmarks_on_image(rgb_image, detection_result):
   pose_landmarks_list = detection_result.pose_landmarks
